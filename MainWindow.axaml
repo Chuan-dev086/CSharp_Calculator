@@ -1,213 +1,75 @@
-<Window
-  xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  x:Class="MyDesktopApp.MainWindow"
-  Title="科学计算器"
-  Width="320"
-  Height="450"
->
-  <Grid RowDefinitions="100, *" Margin="10">
-    <!-- 顶部屏幕（字号稍微改小一点点，防止算式太长超出屏幕） -->
-    <Border Grid.Row="0" Background="#1E1E1E" CornerRadius="5" Margin="5">
-      <TextBlock
-        x:Name="DisplayText"
-        Text="0"
-        FontSize="32"
-        Foreground="White"
-        HorizontalAlignment="Right"
-        VerticalAlignment="Bottom"
-        Margin="10"
-        TextWrapping="Wrap"
-      />
-    </Border>
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MyDesktopApp.MainWindow"
+        Title="Scientific Calculator" Width="600" Height="750"
+        CanResize="True">
 
-    <!-- 底部按键区 -->
-    <Grid Grid.Row="1" RowDefinitions="*,*,*,*,*" ColumnDefinitions="*,*,*,*" Margin="5">
-      <Button
-        Grid.Row="0"
-        Grid.Column="0"
-        Content="C"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="0"
-        Grid.Column="1"
-        Content="("
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="0"
-        Grid.Column="2"
-        Content=")"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="0"
-        Grid.Column="3"
-        Content="/"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CornerRadius" Value="5"/>
 
-      <Button
-        Grid.Row="1"
-        Grid.Column="0"
-        Content="7"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="1"
-        Grid.Column="1"
-        Content="8"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="1"
-        Grid.Column="2"
-        Content="9"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="1"
-        Grid.Column="3"
-        Content="*"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
+            <!-- 就是这两行，让按钮撑满格子，解决大小不一的问题 -->
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
 
-      <Button
-        Grid.Row="2"
-        Grid.Column="0"
-        Content="4"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="2"
-        Grid.Column="1"
-        Content="5"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="2"
-        Grid.Column="2"
-        Content="6"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="2"
-        Grid.Column="3"
-        Content="-"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
+            <!-- 让文字居中 -->
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#555555"/>
+        </Style>
+    </Window.Styles>
 
-      <Button
-        Grid.Row="3"
-        Grid.Column="0"
-        Content="1"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="3"
-        Grid.Column="1"
-        Content="2"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="3"
-        Grid.Column="2"
-        Content="3"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="3"
-        Grid.Column="3"
-        Content="+"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
+    <Grid RowDefinitions="120, *" Margin="10" Background="#1E1E1E">
 
-      <Button
-        Grid.Row="4"
-        Grid.Column="0"
-        Content="0"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="4"
-        Grid.Column="1"
-        Content="."
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <!-- 注意这里，我把箭头改成了 DEL -->
-      <Button
-        Grid.Row="4"
-        Grid.Column="2"
-        Content="DEL"
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
-      <Button
-        Grid.Row="4"
-        Grid.Column="3"
-        Content="="
-        Click="OnButtonClick"
-        Margin="3"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-      />
+        <Border Grid.Row="0" Background="#111111" CornerRadius="8" Margin="4">
+            <TextBlock x:Name="DisplayText"
+                       Text="0"
+                       FontSize="42"
+                       Foreground="White"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Margin="15,0"
+                       TextWrapping="Wrap"/>
+        </Border>
+
+        <Grid Grid.Row="1" RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="*,*,*,*">
+
+            <Button Grid.Row="0" Grid.Column="0" Content="C" Click="OnButtonClick" Foreground="#FF5555"/>
+            <Button Grid.Row="0" Grid.Column="1" Content="+/-" Click="OnButtonClick"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="%" Click="OnButtonClick"/>
+            <Button Grid.Row="0" Grid.Column="3" Content="/" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+            <Button Grid.Row="1" Grid.Column="0" Content="7" Click="OnButtonClick"/>
+            <Button Grid.Row="1" Grid.Column="1" Content="8" Click="OnButtonClick"/>
+            <Button Grid.Row="1" Grid.Column="2" Content="9" Click="OnButtonClick"/>
+            <Button Grid.Row="1" Grid.Column="3" Content="*" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+            <Button Grid.Row="2" Grid.Column="0" Content="4" Click="OnButtonClick"/>
+            <Button Grid.Row="2" Grid.Column="1" Content="5" Click="OnButtonClick"/>
+            <Button Grid.Row="2" Grid.Column="2" Content="6" Click="OnButtonClick"/>
+            <Button Grid.Row="2" Grid.Column="3" Content="-" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+            <Button Grid.Row="3" Grid.Column="0" Content="1" Click="OnButtonClick"/>
+            <Button Grid.Row="3" Grid.Column="1" Content="2" Click="OnButtonClick"/>
+            <Button Grid.Row="3" Grid.Column="2" Content="3" Click="OnButtonClick"/>
+            <Button Grid.Row="3" Grid.Column="3" Content="+" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+            <Button Grid.Row="4" Grid.Column="0" Content="(" Click="OnButtonClick"/>
+            <Button Grid.Row="4" Grid.Column="1" Content=")" Click="OnButtonClick"/>
+            <Button Grid.Row="4" Grid.Column="2" Content="√" Click="OnButtonClick"/>
+            <Button Grid.Row="4" Grid.Column="3" Content="x²" Click="OnButtonClick"/>
+
+            <Button Grid.Row="5" Grid.Column="0" Content="DEL" Click="OnButtonClick" Foreground="#FFAA00"/>
+            <Button Grid.Row="5" Grid.Column="1" Content="0" Click="OnButtonClick"/>
+            <Button Grid.Row="5" Grid.Column="2" Content="." Click="OnButtonClick"/>
+            <Button Grid.Row="5" Grid.Column="3" Content="=" Click="OnButtonClick" Background="#0078D7" Foreground="White"/>
+
+        </Grid>
     </Grid>
-  </Grid>
 </Window>
