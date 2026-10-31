@@ -69,9 +69,8 @@
             <Grid RowDefinitions="Auto, *">
                 <TextBlock Grid.Row="0" Text="Calculations" Foreground="#AAAAAA" FontSize="14" Margin="0,0,0,10"/>
                 <!-- 这个 ListBox 会自动绑定我们 C# 里的数据 -->
-                <ListBox Grid.Row="1" x:Name="HistoryListBox" Background="Transparent" BorderThickness="0">
+                <ListBox Grid.Row="1" x:Name="HistoryListBox" Background="Transparent" BorderThickness="0" SelectionChanged="OnHistorySelected">
                     <ListBox.Styles>
-                        <!-- 简单美化一下列表里的每一项 -->
                         <Style Selector="ListBoxItem">
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="FontSize" Value="16"/>
