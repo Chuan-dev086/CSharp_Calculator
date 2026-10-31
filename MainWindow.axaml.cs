@@ -1,17 +1,24 @@
-using System;
-using System.Data;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using System;
+using System.Data;
+using System.Collections.ObjectModel; // 引入动态集合
 
 namespace MyDesktopApp;
 
 public partial class MainWindow : Window
 {
     private string expression = "";
+    
+    // 这就是我们的“历史记录动态数组”，只要往里面加东西，界面就会自动刷新！
+    private ObservableCollection<string> historyList = new ObservableCollection<string>();
 
     public MainWindow()
     {
         InitializeComponent();
+        
+        // 把右边的 ListBox 和我们的集合绑定起来
+        HistoryListBox.ItemsSource = historyList;
     }
 
     private void OnButtonClick(object? sender, RoutedEventArgs e)
@@ -20,6 +27,7 @@ public partial class MainWindow : Window
         {
             string content = button.Content?.ToString() ?? "";
 
+            // 清空
             if (content == "C")
             {
                 expression = "";
@@ -27,6 +35,7 @@ public partial class MainWindow : Window
                 return;
             }
 
+            // 退格
             if (content == "DEL")
             {
                 if (expression.Length > 0)
@@ -35,14 +44,19 @@ public partial class MainWindow : Window
                 return;
             }
 
+            // 等于号 (核心改动：计算完毕后，把记录加到右边)
             if (content == "=")
             {
-                if (string.IsNullOrEmpty(expression))
-                    return;
+                if (string.IsNullOrEmpty(expression)) return;
                 try
                 {
                     var result = new DataTable().Compute(expression, null);
-                    expression = result.ToString() ?? "0";
+                    string resultStr = result.ToString() ?? "0";
+                    
+                    // 把完整算式和结果加到历史记录里
+                    historyList.Insert(0, $"{expression} = {resultStr}"); // Insert(0) 让最新的记录永远在最上面
+                    
+                    expression = resultStr;
                     DisplayText.Text = expression;
                 }
                 catch
@@ -53,20 +67,15 @@ public partial class MainWindow : Window
                 return;
             }
 
-            // ==========================================
-            // 阶段 A：科学运算（开根号、平方）
-            // ==========================================
+            // 科学运算（√ 和 x²）
             if (content == "√" || content == "x²")
             {
-                if (string.IsNullOrEmpty(expression))
-                    return;
+                if (string.IsNullOrEmpty(expression)) return;
                 try
                 {
                     var currentResult = Convert.ToDouble(new DataTable().Compute(expression, null));
-                    if (content == "√")
-                        currentResult = Math.Sqrt(currentResult);
-                    else if (content == "x²")
-                        currentResult = Math.Pow(currentResult, 2);
+                    if (content == "√") currentResult = Math.Sqrt(currentResult);
+                    else if (content == "x²") currentResult = Math.Pow(currentResult, 2);
 
                     expression = currentResult.ToString();
                     DisplayText.Text = expression;
@@ -79,50 +88,33 @@ public partial class MainWindow : Window
                 return;
             }
 
-            // ==========================================
-            // 阶段 B：正负号与百分号
-            // ==========================================
+            // 正负号与百分号
             if (content == "+/-")
             {
-                if (string.IsNullOrEmpty(expression))
-                    return;
+                if (string.IsNullOrEmpty(expression)) return;
                 try
                 {
-                    // 简单处理：算出一个具体值，取负，放回屏幕
                     var val = Convert.ToDouble(new DataTable().Compute(expression, null));
                     expression = (-val).ToString();
                     DisplayText.Text = expression;
-                }
-                catch
-                { /* 忽略错误 */
-                }
+                } catch { }
                 return;
             }
 
             if (content == "%")
             {
-                if (string.IsNullOrEmpty(expression))
-                    return;
+                if (string.IsNullOrEmpty(expression)) return;
                 try
                 {
-                    // 算出一个具体值，除以100，放回屏幕
                     var val = Convert.ToDouble(new DataTable().Compute(expression, null));
                     expression = (val / 100.0).ToString();
                     DisplayText.Text = expression;
-                }
-                catch
-                { /* 忽略错误 */
-                }
+                } catch { }
                 return;
             }
 
-            // ==========================================
             // 常规输入
-            // ==========================================
-            if (
-                string.IsNullOrEmpty(expression)
-                && (content == "+" || content == "*" || content == "/" || content == ")")
-            )
+            if (string.IsNullOrEmpty(expression) && (content == "+" || content == "*" || content == "/" || content == ")"))
                 return;
 
             if (expression.Length < 30)

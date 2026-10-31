@@ -1,8 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="MyDesktopApp.MainWindow"
-        Title="Scientific Calculator" Width="600" Height="750"
-        CanResize="True">
+        Title="科学计算器" Width="500" Height="520"
+        CanResize="False">
 
     <Window.Styles>
         <Style Selector="Button">
@@ -11,12 +11,8 @@
             <Setter Property="Background" Value="#333333"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="CornerRadius" Value="5"/>
-
-            <!-- 就是这两行，让按钮撑满格子，解决大小不一的问题 -->
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
-
-            <!-- 让文字居中 -->
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
@@ -25,51 +21,67 @@
         </Style>
     </Window.Styles>
 
-    <Grid RowDefinitions="120, *" Margin="10" Background="#1E1E1E">
+    <!-- 最外层用两列：左边占比 3，右边占比 2 -->
+    <Grid ColumnDefinitions="3*, 2*" Background="#1E1E1E" Margin="10">
 
-        <Border Grid.Row="0" Background="#111111" CornerRadius="8" Margin="4">
-            <TextBlock x:Name="DisplayText"
-                       Text="0"
-                       FontSize="42"
-                       Foreground="White"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Center"
-                       Margin="15,0"
-                       TextWrapping="Wrap"/>
+        <!-- ================= 左侧：计算器区 ================= -->
+        <Grid Grid.Column="0" RowDefinitions="120, *" Margin="0,0,10,0">
+            <Border Grid.Row="0" Background="#111111" CornerRadius="8" Margin="4">
+                <TextBlock x:Name="DisplayText" Text="0" FontSize="42" Foreground="White"
+                           HorizontalAlignment="Right" VerticalAlignment="Center" Margin="15,0" TextWrapping="Wrap"/>
+            </Border>
+
+            <Grid Grid.Row="1" RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="*,*,*,*">
+                <Button Grid.Row="0" Grid.Column="0" Content="C" Click="OnButtonClick" Foreground="#FF5555"/>
+                <Button Grid.Row="0" Grid.Column="1" Content="+/-" Click="OnButtonClick"/>
+                <Button Grid.Row="0" Grid.Column="2" Content="%" Click="OnButtonClick"/>
+                <Button Grid.Row="0" Grid.Column="3" Content="/" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+                <Button Grid.Row="1" Grid.Column="0" Content="7" Click="OnButtonClick"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="8" Click="OnButtonClick"/>
+                <Button Grid.Row="1" Grid.Column="2" Content="9" Click="OnButtonClick"/>
+                <Button Grid.Row="1" Grid.Column="3" Content="*" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+                <Button Grid.Row="2" Grid.Column="0" Content="4" Click="OnButtonClick"/>
+                <Button Grid.Row="2" Grid.Column="1" Content="5" Click="OnButtonClick"/>
+                <Button Grid.Row="2" Grid.Column="2" Content="6" Click="OnButtonClick"/>
+                <Button Grid.Row="2" Grid.Column="3" Content="-" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+                <Button Grid.Row="3" Grid.Column="0" Content="1" Click="OnButtonClick"/>
+                <Button Grid.Row="3" Grid.Column="1" Content="2" Click="OnButtonClick"/>
+                <Button Grid.Row="3" Grid.Column="2" Content="3" Click="OnButtonClick"/>
+                <Button Grid.Row="3" Grid.Column="3" Content="+" Click="OnButtonClick" Foreground="#55AAFF"/>
+
+                <Button Grid.Row="4" Grid.Column="0" Content="(" Click="OnButtonClick"/>
+                <Button Grid.Row="4" Grid.Column="1" Content=")" Click="OnButtonClick"/>
+                <Button Grid.Row="4" Grid.Column="2" Content="√" Click="OnButtonClick"/>
+                <Button Grid.Row="4" Grid.Column="3" Content="x²" Click="OnButtonClick"/>
+
+                <Button Grid.Row="5" Grid.Column="0" Content="DEL" Click="OnButtonClick" Foreground="#FFAA00"/>
+                <Button Grid.Row="5" Grid.Column="1" Content="0" Click="OnButtonClick"/>
+                <Button Grid.Row="5" Grid.Column="2" Content="." Click="OnButtonClick"/>
+                <Button Grid.Row="5" Grid.Column="3" Content="=" Click="OnButtonClick" Background="#0078D7" Foreground="White"/>
+            </Grid>
+        </Grid>
+
+        <!-- ================= 右侧：历史记录区 ================= -->
+        <Border Grid.Column="1" Background="#111111" CornerRadius="8" Padding="10">
+            <Grid RowDefinitions="Auto, *">
+                <TextBlock Grid.Row="0" Text="Calculations" Foreground="#AAAAAA" FontSize="14" Margin="0,0,0,10"/>
+                <!-- 这个 ListBox 会自动绑定我们 C# 里的数据 -->
+                <ListBox Grid.Row="1" x:Name="HistoryListBox" Background="Transparent" BorderThickness="0">
+                    <ListBox.Styles>
+                        <!-- 简单美化一下列表里的每一项 -->
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontSize" Value="16"/>
+                            <Setter Property="Padding" Value="5"/>
+                            <Setter Property="Margin" Value="0,2"/>
+                        </Style>
+                    </ListBox.Styles>
+                </ListBox>
+            </Grid>
         </Border>
 
-        <Grid Grid.Row="1" RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="*,*,*,*">
-
-            <Button Grid.Row="0" Grid.Column="0" Content="C" Click="OnButtonClick" Foreground="#FF5555"/>
-            <Button Grid.Row="0" Grid.Column="1" Content="+/-" Click="OnButtonClick"/>
-            <Button Grid.Row="0" Grid.Column="2" Content="%" Click="OnButtonClick"/>
-            <Button Grid.Row="0" Grid.Column="3" Content="/" Click="OnButtonClick" Foreground="#55AAFF"/>
-
-            <Button Grid.Row="1" Grid.Column="0" Content="7" Click="OnButtonClick"/>
-            <Button Grid.Row="1" Grid.Column="1" Content="8" Click="OnButtonClick"/>
-            <Button Grid.Row="1" Grid.Column="2" Content="9" Click="OnButtonClick"/>
-            <Button Grid.Row="1" Grid.Column="3" Content="*" Click="OnButtonClick" Foreground="#55AAFF"/>
-
-            <Button Grid.Row="2" Grid.Column="0" Content="4" Click="OnButtonClick"/>
-            <Button Grid.Row="2" Grid.Column="1" Content="5" Click="OnButtonClick"/>
-            <Button Grid.Row="2" Grid.Column="2" Content="6" Click="OnButtonClick"/>
-            <Button Grid.Row="2" Grid.Column="3" Content="-" Click="OnButtonClick" Foreground="#55AAFF"/>
-
-            <Button Grid.Row="3" Grid.Column="0" Content="1" Click="OnButtonClick"/>
-            <Button Grid.Row="3" Grid.Column="1" Content="2" Click="OnButtonClick"/>
-            <Button Grid.Row="3" Grid.Column="2" Content="3" Click="OnButtonClick"/>
-            <Button Grid.Row="3" Grid.Column="3" Content="+" Click="OnButtonClick" Foreground="#55AAFF"/>
-
-            <Button Grid.Row="4" Grid.Column="0" Content="(" Click="OnButtonClick"/>
-            <Button Grid.Row="4" Grid.Column="1" Content=")" Click="OnButtonClick"/>
-            <Button Grid.Row="4" Grid.Column="2" Content="√" Click="OnButtonClick"/>
-            <Button Grid.Row="4" Grid.Column="3" Content="x²" Click="OnButtonClick"/>
-
-            <Button Grid.Row="5" Grid.Column="0" Content="DEL" Click="OnButtonClick" Foreground="#FFAA00"/>
-            <Button Grid.Row="5" Grid.Column="1" Content="0" Click="OnButtonClick"/>
-            <Button Grid.Row="5" Grid.Column="2" Content="." Click="OnButtonClick"/>
-            <Button Grid.Row="5" Grid.Column="3" Content="=" Click="OnButtonClick" Background="#0078D7" Foreground="White"/>
-
-        </Grid>
     </Grid>
 </Window>
